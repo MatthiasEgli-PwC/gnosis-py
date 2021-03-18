@@ -739,7 +739,7 @@ class ParityManager:
         payload = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_block',
                     'params': [hex(block_identifier) if isinstance(block_identifier, int) else block_identifier]}
                    for i, block_identifier in enumerate(block_identifiers)]
-        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json()
+        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json().get('result', [])
         traces = []
         for result in results:
             raw_tx = result['result']
