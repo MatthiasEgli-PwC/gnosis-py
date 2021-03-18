@@ -736,12 +736,12 @@ class ParityManager:
     def trace_blocks(self, block_identifiers: List[BlockIdentifier]) -> List[List[Dict[str, Any]]]:
         if not block_identifiers:
             return []
-        payload = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_block',
+        payloads = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_block',
                     'params': [hex(block_identifier) if isinstance(block_identifier, int) else block_identifier]}
                    for i, block_identifier in enumerate(block_identifiers)]
-        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json().get('result', [])
         traces = []
-        for result in results:
+        for payload in payloads:
+            result = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json()
             raw_tx = result['result']
             if raw_tx:
                 try:
@@ -772,12 +772,12 @@ class ParityManager:
         """
         if not tx_hashes:
             return []
-        payload = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_transaction',
+        payloads = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_transaction',
                     'params': [HexBytes(tx_hash).hex()]}
                    for i, tx_hash in enumerate(tx_hashes)]
-        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json().get('result', [])
         traces = []
-        for result in results:
+        for payload in payloads:
+            result = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json()
             raw_tx = result['result']
             if raw_tx:
                 try:
