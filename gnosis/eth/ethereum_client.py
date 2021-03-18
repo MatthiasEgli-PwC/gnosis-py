@@ -775,7 +775,7 @@ class ParityManager:
         payload = [{'id': i, 'jsonrpc': '2.0', 'method': 'trace_transaction',
                     'params': [HexBytes(tx_hash).hex()]}
                    for i, tx_hash in enumerate(tx_hashes)]
-        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json()
+        results = self.ethereum_client.http_session.post(self.ethereum_node_url, json=payload).json().get('result', [])
         traces = []
         for result in results:
             raw_tx = result['result']
